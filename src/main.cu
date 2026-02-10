@@ -1,10 +1,9 @@
-#include <concepts>
-#include <cstddef>
-#include <ios>
-#include <iostream>
-#include <random>
+#include <particles.hpp>
 
 int main()
 {
+    auto initiation = Particles::read_from_file("particles.txt");
+    Particles particles(initiation);
+
     return 0;
 }

@@ -2,6 +2,7 @@
 #include <cfloat>
 #include <cstddef>
 #include <cstring>
+#include <fstream>
 #include <particle.hpp>
 #include <particles.hpp>
 #include <stdexcept>
@@ -250,6 +251,24 @@ std::vector<Particle> Particles::as_vector()
     for (size_t i = 0; i < m_size; i++)
     {
         particles.emplace_back(m_x[i], m_y[i], m_z[i], m_vx[i], m_vy[i], m_vz[i], m_m[i], m_q[i]);
+    }
+
+    return particles;
+}
+
+std::vector<Particle> Particles::read_from_file(const std::string &file_name)
+{
+    std::ifstream file(file_name);
+    std::vector<Particle> particles;
+
+    size_t N;
+    float x, y, z, vx, vy, vz, m, q;
+
+    file >> N;
+    for (size_t i = 0; i < N; i++)
+    {
+        file >> x >> y >> z >> vx >> vy >> vz >> m >> q;
+        particles.emplace_back(x, y, z, vx, vy, vz, m, q);
     }
 
     return particles;
