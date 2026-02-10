@@ -1,4 +1,4 @@
-project('nbody-simulation', 'cpp',
+project('nbody-simulation', ['cpp', 'cuda'],
   version: '1.0.0',
   default_options: [
     'cpp_std=c++20',
@@ -12,24 +12,28 @@ project('nbody-simulation', 'cpp',
 include_dir = include_directories('include')
 
 source_files = files(
-  'src/main.cpp',
+  'src/main.cu',
+  'src/particles.cu'
 )
 
 cc = meson.get_compiler('cpp')
 m_dep = cc.find_library('m', required: true) 
 
-# Tihs project is meant to be compiled using nvc++.
+gpu_flags = [
+  '--generate-code=arch=compute_80,code=sm_80',
+  '-Xcompiler=-O3',
+]
+
+# Tihs project is meant to be compiled using nvcc.
 nbody_exe = executable('nbody',
     sources: source_files,
     include_directories: include_dir,
     dependencies: [m_dep],
-    cpp_args: [
-        '-fast',
-        '-Minfo=accel',
-    ],
+    cpp_args: gpu_flags,
+    link_args: gpu_flags, 
     install: true
-)
+  )
 
-if get_option('debug')
-  add_project_arguments('-g', '-O0', language: 'cpp')
-endif
+  if get_option('debug')
+    add_project_arguments('-g', '-O0', language: 'cpp')
+  endif

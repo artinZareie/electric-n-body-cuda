@@ -1,0 +1,15 @@
+CompileFlags:
+  Add: 
+    - "-x"
+    - "cuda"
+    - "--cuda-path=/opt/nvidia/hpc_sdk/Linux_x86_64/25.11/cuda"
+    - "--cuda-gpu-arch=sm_80"
+
+  Remove: 
+    - "-Minfo=*"
+    - "-Minform=*"
+    - "-fast"
+    - "-acc" 
+    - "-cuda" 
+    - "-nvc++"
+    - "-Xcompiler=*"
