@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <cstring>
 #include <fstream>
-#include <particle.hpp>
-#include <particles.hpp>
+#include <particle.cuh>
+#include <particles.cuh>
 #include <stdexcept>
 #include <vector>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "particle.hpp"
+#include "particle.cuh"
 #include <cstddef>
 #include <memory>
 #include <string>

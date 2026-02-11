@@ -1,4 +1,4 @@
-#include <particles.hpp>
+#include <particles.cuh>
 
 int main()
 {
