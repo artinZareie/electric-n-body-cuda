@@ -13,7 +13,9 @@ include_dir = include_directories('include')
 
 source_files = files(
   'src/main.cu',
-  'src/particles.cu'
+  'src/particles.cu',
+  'src/compute.cu',
+  'src/vtk_writer.cu'
 )
 
 cc = meson.get_compiler('cpp')
