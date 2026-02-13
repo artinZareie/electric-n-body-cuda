@@ -6,14 +6,16 @@ SimulationEngine::SimulationEngine(Particles &&particles, const SimulationConfig
 {
 }
 
+SimulationEngine::~SimulationEngine()
+{
+    stop();
+    if (m_sim_thread.joinable())
+        m_sim_thread.join();
+}
+
 void SimulationEngine::attach_renderer(std::unique_ptr<IRenderer> renderer)
 {
     m_renderers.push_back(std::move(renderer));
-}
-
-void SimulationEngine::on_step_completed(std::function<void(size_t)> callback)
-{
-    m_step_callbacks.push_back(std::move(callback));
 }
 
 void SimulationEngine::initialize()
@@ -25,9 +27,7 @@ void SimulationEngine::initialize()
     m_particles.view();
 
     for (auto &renderer : m_renderers)
-    {
         renderer->initialize("vtk");
-    }
 
     m_initialized = true;
 }
@@ -36,71 +36,92 @@ void SimulationEngine::step()
 {
     auto view = m_particles.view();
     m_physics->step(view, m_config.dt);
-
-    for (const auto &callback : m_step_callbacks)
-    {
-        callback(m_current_step);
-    }
 }
 
-void SimulationEngine::render()
+void SimulationEngine::live_loop(FrameQueue &queue)
 {
-    m_particles.update_with_device();
+    std::cout << "Loaded " << m_particles.size() << " particles\n";
+    std::cout << "Running live simulation...\n";
 
-    for (auto &renderer : m_renderers)
+    size_t local_step = 0;
+    while (m_running.load())
     {
-        renderer->render(m_particles, m_current_step);
-    }
-}
+        step();
+        ++local_step;
+        m_current_step.store(local_step);
 
-void SimulationEngine::cleanup()
-{
-    for (auto &renderer : m_renderers)
-    {
-        renderer->shutdown();
+        if (local_step % m_config.output_interval == 0)
+        {
+            m_particles.update_with_device();
+            auto cpu = m_particles.cpu_view();
+            size_t n = m_particles.size();
+
+            Frame frame;
+            frame.step = local_step;
+            frame.x.assign(cpu.x, cpu.x + n);
+            frame.y.assign(cpu.y, cpu.y + n);
+            frame.z.assign(cpu.z, cpu.z + n);
+
+            queue.push(std::move(frame));
+
+            if (m_config.status_interval > 0 && local_step % m_config.status_interval == 0)
+                std::cout << "Step " << local_step << "\n";
+        }
     }
 
+    queue.close();
     m_particles.update_and_unview();
+    std::cout << "\nSimulation stopped at step " << local_step << "\n";
 }
 
-void SimulationEngine::run()
+void SimulationEngine::batch_loop()
 {
-    initialize();
-
-    m_running = true;
-    m_current_step = 0;
-
     std::cout << "Loaded " << m_particles.size() << " particles\n";
     std::cout << "Running simulation for " << m_config.max_steps << " steps...\n";
 
-    while (m_running && m_current_step <= m_config.max_steps)
+    for (size_t local_step = 0; m_running.load() && local_step <= m_config.max_steps; ++local_step)
     {
-        if (m_current_step % m_config.output_interval == 0)
+        if (local_step % m_config.output_interval == 0)
         {
-            render();
+            m_particles.update_with_device();
+            for (auto &renderer : m_renderers)
+                renderer->render(m_particles, local_step);
 
-            if (m_config.status_interval > 0 && m_current_step % m_config.status_interval == 0)
-            {
-                std::cout << "Step " << m_current_step << "/" << m_config.max_steps << "\n";
-            }
+            if (m_config.status_interval > 0 && local_step % m_config.status_interval == 0)
+                std::cout << "Step " << local_step << "/" << m_config.max_steps << "\n";
         }
 
-        if (m_current_step < m_config.max_steps)
-        {
+        if (local_step < m_config.max_steps)
             step();
-        }
 
-        ++m_current_step;
+        m_current_step.store(local_step + 1);
     }
 
-    cleanup();
-    m_running = false;
+    for (auto &renderer : m_renderers)
+        renderer->shutdown();
 
-    std::cout << "\nSimulation complete! VTK files written to vtk/ directory.\n";
-    std::cout << "Run create_video_simple.py to generate video.\n";
+    m_particles.update_and_unview();
+    m_running.store(false);
+    std::cout << "\nSimulation complete!\n";
+}
+
+void SimulationEngine::run_async(FrameQueue &queue)
+{
+    initialize();
+    m_running.store(true);
+    m_current_step.store(0);
+    m_sim_thread = std::thread(&SimulationEngine::live_loop, this, std::ref(queue));
+}
+
+void SimulationEngine::run_blocking()
+{
+    initialize();
+    m_running.store(true);
+    m_current_step.store(0);
+    batch_loop();
 }
 
 void SimulationEngine::stop()
 {
-    m_running = false;
+    m_running.store(false);
 }

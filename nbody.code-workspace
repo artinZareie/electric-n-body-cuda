@@ -6,6 +6,8 @@
 	],
 	"settings": {
 		"r.lsp.promptToInstall": false,
-		"mesonbuild.configureOnOpen": false
+		"mesonbuild.configureOnOpen": false,
+		"C_Cpp.default.compileCommands": "/mnt/Projects/Projects/nbody/builddir/compile_commands.json",
+		"C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild"
 	}
 }

@@ -3,9 +3,9 @@
 all: build
 
 setup:
-	meson setup build --wipe --ini-file native-file.ini
+	meson setup --reconfigure build
 
-build:
+build: setup
 	meson compile -C build
 
 clean:

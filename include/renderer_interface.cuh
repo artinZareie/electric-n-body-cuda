@@ -12,6 +12,10 @@ class IRenderer
     virtual void initialize(const std::string &output_path) = 0;
     virtual void render(const Particles &particles, size_t frame_index) = 0;
     virtual void shutdown() = 0;
+    virtual bool is_interactive() const
+    {
+        return false;
+    }
 };
 
 class IRendererFactory
