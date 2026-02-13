@@ -1,5 +1,5 @@
-#include "compute.cuh"
 #include "Array2D.cuh"
+#include "compute.cuh"
 #include "particles.cuh"
 #include <cmath>
 #include <cuda_runtime.h>

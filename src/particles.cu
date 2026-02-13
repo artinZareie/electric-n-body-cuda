@@ -9,9 +9,8 @@
 #include <vector>
 
 Particles::Particles(const std::vector<Particle> &particles)
-    : m_x(particles.size()), m_y(particles.size()), m_z(particles.size()),
-      m_vx(particles.size()), m_vy(particles.size()), m_vz(particles.size()),
-      m_m(particles.size()), m_q(particles.size())
+    : m_x(particles.size()), m_y(particles.size()), m_z(particles.size()), m_vx(particles.size()),
+      m_vy(particles.size()), m_vz(particles.size()), m_m(particles.size()), m_q(particles.size())
 {
     for (size_t i = 0; i < particles.size(); i++)
     {
@@ -27,15 +26,13 @@ Particles::Particles(const std::vector<Particle> &particles)
 }
 
 Particles::Particles(size_t n, float *x, float *y, float *z, float *vx, float *vy, float *vz, float *m, float *q)
-    : m_x(x, x + n), m_y(y, y + n), m_z(z, z + n),
-      m_vx(vx, vx + n), m_vy(vy, vy + n), m_vz(vz, vz + n),
-      m_m(m, m + n), m_q(q, q + n)
+    : m_x(x, x + n), m_y(y, y + n), m_z(z, z + n), m_vx(vx, vx + n), m_vy(vy, vy + n), m_vz(vz, vz + n), m_m(m, m + n),
+      m_q(q, q + n)
 {
 }
 
 Particles::Particles(const Particles &other)
-    : m_x(other.m_x), m_y(other.m_y), m_z(other.m_z),
-      m_vx(other.m_vx), m_vy(other.m_vy), m_vz(other.m_vz),
+    : m_x(other.m_x), m_y(other.m_y), m_z(other.m_z), m_vx(other.m_vx), m_vy(other.m_vy), m_vz(other.m_vz),
       m_m(other.m_m), m_q(other.m_q)
 {
 }
@@ -92,9 +89,8 @@ ParticlesView Particles::view()
         cudaMemcpy(m_device_memory->q, m_q.data(), n * sizeof(float), cudaMemcpyHostToDevice);
     }
 
-    return ParticlesView{m_device_memory->x, m_device_memory->y, m_device_memory->z,
-                         m_device_memory->vx, m_device_memory->vy, m_device_memory->vz,
-                         m_device_memory->m, m_device_memory->q};
+    return ParticlesView{m_device_memory->x,  m_device_memory->y,  m_device_memory->z, m_device_memory->vx,
+                         m_device_memory->vy, m_device_memory->vz, m_device_memory->m, m_device_memory->q};
 }
 
 void Particles::update_with_device()
@@ -123,21 +119,28 @@ void Particles::update_and_unview()
 
 Particles::DeviceMemory::~DeviceMemory()
 {
-    if (x) cudaFree(x);
-    if (y) cudaFree(y);
-    if (z) cudaFree(z);
-    if (vx) cudaFree(vx);
-    if (vy) cudaFree(vy);
-    if (vz) cudaFree(vz);
-    if (m) cudaFree(m);
-    if (q) cudaFree(q);
+    if (x)
+        cudaFree(x);
+    if (y)
+        cudaFree(y);
+    if (z)
+        cudaFree(z);
+    if (vx)
+        cudaFree(vx);
+    if (vy)
+        cudaFree(vy);
+    if (vz)
+        cudaFree(vz);
+    if (m)
+        cudaFree(m);
+    if (q)
+        cudaFree(q);
 }
 
 ParticlesView Particles::cpu_view()
 {
-    return ParticlesView{m_x.data(), m_y.data(), m_z.data(),
-                         m_vx.data(), m_vy.data(), m_vz.data(),
-                         m_m.data(), m_q.data()};
+    return ParticlesView{m_x.data(),  m_y.data(),  m_z.data(), m_vx.data(),
+                         m_vy.data(), m_vz.data(), m_m.data(), m_q.data()};
 }
 
 std::vector<Particle> Particles::as_vector() const

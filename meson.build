@@ -15,7 +15,10 @@ source_files = files(
   'src/main.cu',
   'src/particles.cu',
   'src/compute.cu',
-  'src/vtk_writer.cu'
+  'src/vtk_writer.cu',
+  'src/simulation_engine.cu',
+  'src/physics_system.cu',
+  'src/vtk_renderer.cu'
 )
 
 cc = meson.get_compiler('cpp')
