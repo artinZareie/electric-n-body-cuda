@@ -1,7 +1,6 @@
 .cache/
 .vscode/
 build/
-vtk/
 frames/
 simulation.mp4
 temp_plot.gnu
