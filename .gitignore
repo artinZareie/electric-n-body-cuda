@@ -4,3 +4,5 @@ build/
 frames/
 simulation.mp4
 temp_plot.gnu
+vtk/*.png
+electric_n_body_cpu/vtk/
