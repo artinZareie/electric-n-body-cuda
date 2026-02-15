@@ -124,6 +124,102 @@ update_particle_states<<<grid, block>>>(particles, net_forces, dt, N);
 
 ---
 
+## How the Tiled Version Works
+
+### Algorithm Overview
+
+The `compute_force_tiled` kernel eliminates the N×N force matrix by processing particles in **tiles** using shared memory. Each thread computes forces for **one particle** by looping through all other particles in **chunks (tiles)** of 256.
+
+### Step-by-Step Process
+
+1. **Load tile into shared memory** (256 particles: positions, velocities, charges)
+   - All threads in the block cooperatively load one tile
+   - Shared memory = fast on-chip cache (28,000 GB/s vs 360 GB/s DRAM)
+
+2. **Compute forces within tile**
+   - Each thread loops through 256 particles in shared memory
+   - Accumulates force contributions in registers (not global memory)
+   - Electric and magnetic force calculations performed on cached data
+
+3. **Move to next tile**, repeat until all N particles processed
+
+4. **Write final net force** to global memory (once per particle)
+
+### Pseudocode
+
+```cpp
+Thread i: 
+  float3 F_total = {0, 0, 0};  // Accumulator in register
+  
+  for each tile of 256 particles:
+    __syncthreads();
+    Load tile → shared memory (cooperative load)
+    __syncthreads();
+    
+    for j in tile:
+      if (i != j):
+        F_total += compute_force(particle_i, particle_j)  // Using shared memory
+  
+  net_forces[i] = F_total;  // Single write to global memory
+```
+
+---
+
+## Why O(N) Work Per Thread Beats O(1) Per Thread
+
+### The Counterintuitive Reality
+
+**Question:** If each thread in the tiled version does O(N) work vs O(1) in the matrix version, why is it faster?
+
+**Answer:** The **total computational work is identical** (O(N²) force calculations in both), but the **memory access patterns** differ drastically.
+
+### Matrix Version: O(1) work per thread
+- **Launch:** N² threads in 2D grid
+- **Work per thread:** O(1) - compute single force entry
+- **Memory:** Each thread writes 1 force to **global memory** (DRAM)
+- **Reduction:** N threads read N values each from global memory
+- **Total global memory traffic:** O(N²) accesses
+
+### Tiled Version: O(N) work per thread
+- **Launch:** N threads in 1D grid
+- **Work per thread:** O(N) - compute all forces on one particle
+- **Memory:** Loads tiles into **shared memory** (100× faster)
+- **Accumulation:** Forces summed in **registers** (1000× faster than DRAM)
+- **Total global memory traffic:** O(N) accesses
+
+### Memory Hierarchy Performance
+
+| Memory Type | Bandwidth | Latency | Access Pattern |
+|-------------|-----------|---------|----------------|
+| **Registers** | ~8000 GB/s | 1 cycle | Tiled: force accumulation |
+| **Shared Memory** | ~28,000 GB/s | ~20 cycles | Tiled: tile data |
+| **L2 Cache** | ~1500 GB/s | ~200 cycles | Both (if fits) |
+| **DRAM (Global)** | 360 GB/s | ~400 cycles | Matrix: force matrix I/O |
+
+### The Bottleneck at Large N
+
+At N=8192, the matrix version must:
+- Write 1 GB force matrix to DRAM: 1024 MB / 360 GB/s = **2.84 ms**
+- Read 1 GB force matrix from DRAM: 1024 MB / 360 GB/s = **2.84 ms**
+- **Total memory time: 5.68 ms minimum** (actual: ~3.2 ms with compute overlap)
+
+The tiled version:
+- Read 2.2 MB particle data: 2.2 MB / 360 GB/s = **0.006 ms**
+- Write 0.13 MB net forces: 0.13 MB / 360 GB/s = **0.0004 ms**
+- **Total memory time: 0.006 ms** + computation time
+
+**Key Insight:** Modern GPUs are memory-bandwidth-limited, not compute-limited. The tiled version avoids expensive global memory by keeping intermediate results on-chip in shared memory and registers.
+
+### Analogy
+
+**Matrix version:** 1 million workers each make 1 trip to a distant warehouse (global memory), store their item, then another team collects everything.
+
+**Tiled version:** 1 worker makes 1000 trips, but to a nearby shelf (shared memory), accumulating results in their hands (registers), then deposits the final result to the warehouse once.
+
+The second approach does more "work" per worker, but drastically less expensive travel.
+
+---
+
 ## Scalability Expectations
 
 Based on previous detailed profiling at larger problem sizes:
@@ -221,7 +317,7 @@ All profiling data is stored in separate directories to avoid any overwriting:
 
 ## 9. Recommendations
 
-### ✅ Adopt the Optimizations
+### Adopt the Optimizations
 
 **For production use at N ≥ 2048:**
 - Clear performance win (1.34× to 4.30× speedup)
@@ -232,16 +328,6 @@ All profiling data is stored in separate directories to avoid any overwriting:
 - Performance difference is negligible (< 10% either way)
 - Use optimized version for consistency across all N
 
-### 🔧 Consider Further Improvements
-
-**Next steps for even better performance:**
-
-1. **Tune tile size** — Test 128, 192, 384 to find optimal for your specific workload
-2. **CUDA streams** — Overlap D2H copies with compute (~5-10% gain)
-3. **Warp-level primitives** — Use `__shfl_down_sync` for intra-warp reductions
-4. **Profile with Nsight Compute** — Deep dive into optimized kernel's remaining bottlenecks
-5. **Multi-GPU** — Distribute particles across GPUs for massive N
-
 ---
 
 ## 10. Conclusion
@@ -249,10 +335,10 @@ All profiling data is stored in separate directories to avoid any overwriting:
 The optimizations successfully transformed a **memory-bound** simulation into a **compute-bound** simulation by eliminating O(N²) intermediate storage.
 
 **Key metrics at N=8192:**
-- ⚡ **4.30× faster** wall time (7.64s → 1.78s)
-- 💾 **99.8% less GPU memory** (1026 MB → 2.2 MB)
-- 📉 **1000× less DRAM traffic** per timestep
-- 🚀 **3.52× faster kernels** (1622 ms → 460 ms)
+- **4.30× faster** wall time (7.64s → 1.78s)
+- **99.8% less GPU memory** (1026 MB → 2.2 MB)
+- **1000× less DRAM traffic** per timestep
+- **3.52× faster kernels** (1622 ms → 460 ms)
 
 The optimization approach — profile, identify bottleneck, eliminate O(N²) memory — is textbook HPC optimization. The results validate the profiling analysis and demonstrate the critical importance of memory access patterns in GPU computing.
 
