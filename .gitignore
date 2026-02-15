@@ -1,8 +1,13 @@
 .cache/
 .vscode/
 build/
+builddir/
+builddir_*/
 frames/
 simulation.mp4
 temp_plot.gnu
 vtk/*.png
-electric_n_body_cpu/vtk/
+vtk/*.vtk
+electric_n_body_cpu/vtk/%
+profiling/results/
+profiling/samples/

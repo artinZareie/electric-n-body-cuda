@@ -72,11 +72,22 @@ os.makedirs("frames", exist_ok=True)
 for i, vtk_file in enumerate(vtk_files):
     points, charges = read_binary_vtk(vtk_file)
     
+    max_abs_q = max(abs(q_min), abs(q_max)) if max(abs(q_min), abs(q_max)) > 0 else 1.0
+    MIN_INTENSITY = 0.15
+
     data_file = f"frames/data_{i:06d}.txt"
     with open(data_file, "w") as f:
         for j in range(len(points)):
-            q_norm = (charges[j] - q_min) / (q_max - q_min) if q_max > q_min else 0.5
-            f.write(f"{points[j, 0]} {points[j, 1]} {points[j, 2]} {q_norm}\n")
+            q = charges[j]
+            intensity = MIN_INTENSITY + (1.0 - MIN_INTENSITY) * abs(q) / max_abs_q
+            if q > 0:
+                r, g, b = int(intensity * 255), 0, 0
+            elif q < 0:
+                r, g, b = 0, 0, int(intensity * 255)
+            else:
+                r, g, b = int(MIN_INTENSITY * 255), int(MIN_INTENSITY * 255), int(MIN_INTENSITY * 255)
+            color_int = (r << 16) | (g << 8) | b
+            f.write(f"{points[j, 0]} {points[j, 1]} {points[j, 2]} {color_int}\n")
     
     output_png = f"frames/frame_{i:06d}.png"
     
@@ -97,10 +108,8 @@ set yrange [{y_min}:{y_max}]
 set zrange [{z_min}:{z_max}]
 set title "Frame {i}" textcolor rgb "white"
 set grid lc rgb "#333333"
-set palette defined (0 "red", 0.5 "yellow", 1 "cyan")
-set cbrange [0:1]
 unset colorbox
-splot '{data_file}' using 1:2:3:4 with points pt 7 ps 2.5 lc palette notitle
+splot '{data_file}' using 1:2:3:4 with points pt 7 ps 2.5 lc rgb variable notitle
 """
     
     with open("temp_plot.gnu", "w") as f:
