@@ -29,6 +29,7 @@ m_dep = cc.find_library('m', required: true)
 gpu_flags = [
   '--generate-code=arch=compute_80,code=sm_80',
   '-Xcompiler=-O3',
+  '--use_fast_math',
 ]
 
 # Tihs project is meant to be compiled using nvcc.

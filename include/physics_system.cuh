@@ -23,7 +23,7 @@ class PhysicsSystem
 
     struct CudaResources
     {
-        Array2D<float4> forces_matrix;
+        // Only need net_forces now, no force matrix
         float4 *net_forces{nullptr};
 
         ~CudaResources();

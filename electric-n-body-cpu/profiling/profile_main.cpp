@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
     // GFLOPS for force computation
     double total_pairs  = static_cast<double>(N) * (static_cast<double>(N) - 1.0) * num_steps;
     double total_flops_force = total_pairs * FLOPS_PER_PAIR;
-    double gflops_force = total_flops_force / (total_force * 1e6); // ms → s, then / 1e9
+    double gflops_force = total_flops_force / (total_force * 1e6); // ms $\rightarrow$ s, then / 1e9
 
     // Particles processed per second (interaction-throughput)
     double particles_per_sec = (static_cast<double>(N) * num_steps) / (total_sim_ms / 1000.0);

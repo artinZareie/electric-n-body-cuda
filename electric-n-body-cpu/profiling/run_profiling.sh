@@ -69,7 +69,7 @@ for N in "${PARTICLE_COUNTS[@]}"; do
     "$PROFILE_BIN" "$N" "$STEPS" "$MAX_THREADS" >> "$SCALING_CSV" 2>/dev/null
     echo "done"
 done
-echo "  → Saved to $SCALING_CSV"
+echo "  $\rightarrow$ Saved to $SCALING_CSV"
 echo ""
 
 # ── Run 2: OpenMP thread scaling (fixed N for each size class) ────
@@ -88,7 +88,7 @@ for N in "${THREAD_TEST_SIZES[@]}"; do
         echo "done"
     done
 done
-echo "  → Saved to $THREAD_CSV"
+echo "  $\rightarrow$ Saved to $THREAD_CSV"
 echo ""
 
 # ── Run 3: Per-step timing distribution (fixed N, max threads) ───
@@ -123,7 +123,7 @@ for N in "${IO_TEST_SIZES[@]}"; do
     "$PROFILE_BIN" "$N" "$IO_STEPS" "$MAX_THREADS" --vtk >> "$IO_CSV" 2>/dev/null
     echo "done"
 done
-echo "  → Saved to $IO_CSV"
+echo "  $\rightarrow$ Saved to $IO_CSV"
 echo ""
 
 # cleanup vtk files from profiling

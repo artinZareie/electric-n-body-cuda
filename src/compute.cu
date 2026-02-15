@@ -123,6 +123,90 @@ __global__ void force_reduction(const Array2D<float4> forces_matrix, float4 *net
     }
 }
 
+// Optimized tiled kernel that fuses force computation and reduction
+// Eliminates the N×N force matrix by computing forces directly into shared memory tiles
+__global__ void compute_force_tiled(const ParticlesView particles, float4 *net_forces, size_t N)
+{
+    // Tile size for shared memory (particles per tile)
+    constexpr int TILE_SIZE = 256;
+    
+    __shared__ float s_x[TILE_SIZE];
+    __shared__ float s_y[TILE_SIZE];
+    __shared__ float s_z[TILE_SIZE];
+    __shared__ float s_vx[TILE_SIZE];
+    __shared__ float s_vy[TILE_SIZE];
+    __shared__ float s_vz[TILE_SIZE];
+    __shared__ float s_q[TILE_SIZE];
+    
+    const size_t i = blockIdx.x * blockDim.x + threadIdx.x;
+    const size_t tid = threadIdx.x;
+    
+    // Accumulate force for particle i
+    float3 F_total = make_float3(0.0f, 0.0f, 0.0f);
+    
+    if (i < N)
+    {
+        // Load particle i's data
+        const float3 ri = make_float3(particles.x[i], particles.y[i], particles.z[i]);
+        const float3 vi = make_float3(particles.vx[i], particles.vy[i], particles.vz[i]);
+        const float qi = particles.q[i];
+        
+        // Iterate over all tiles
+        for (size_t tile_start = 0; tile_start < N; tile_start += TILE_SIZE)
+        {
+            // Load tile into shared memory
+            size_t j_idx = tile_start + tid;
+            if (j_idx < N)
+            {
+                s_x[tid] = particles.x[j_idx];
+                s_y[tid] = particles.y[j_idx];
+                s_z[tid] = particles.z[j_idx];
+                s_vx[tid] = particles.vx[j_idx];
+                s_vy[tid] = particles.vy[j_idx];
+                s_vz[tid] = particles.vz[j_idx];
+                s_q[tid] = particles.q[j_idx];
+            }
+            __syncthreads();
+            
+            // Compute forces from this tile
+            size_t tile_end = min(tile_start + TILE_SIZE, N);
+            for (size_t j = tile_start; j < tile_end; j++)
+            {
+                size_t j_local = j - tile_start;
+                
+                if (i == j)
+                    continue;
+                
+                const float3 rj = make_float3(s_x[j_local], s_y[j_local], s_z[j_local]);
+                const float3 vj = make_float3(s_vx[j_local], s_vy[j_local], s_vz[j_local]);
+                const float qj = s_q[j_local];
+                
+                float3 r = make_float3(ri.x - rj.x, ri.y - rj.y, ri.z - rj.z);
+                
+                float r2 = r.x * r.x + r.y * r.y + r.z * r.z + SOFT2;
+                float inv_r = rsqrtf(r2);
+                float inv_r3 = inv_r * inv_r * inv_r;
+                
+                // Electric force
+                float coeff_e = K_E * qj * qi * inv_r3;
+                float3 F_electric = coeff_e * r;
+                
+                // Magnetic force
+                float coeff_m = K_M * qj * qi * inv_r3;
+                float vi_dot_r = dot(vi, r);
+                float vi_dot_vj = dot(vi, vj);
+                float3 F_magnetic = coeff_m * (vi_dot_r * vj - vi_dot_vj * r);
+                
+                F_total = F_total + F_electric + F_magnetic;
+            }
+            __syncthreads();
+        }
+        
+        // Write net force
+        net_forces[i] = make_float4(F_total.x, F_total.y, F_total.z, 0.0f);
+    }
+}
+
 __global__ void update_particle_states(ParticlesView particles, const float3 *net_forces, float dt, size_t N)
 {
     const size_t idx = threadIdx.x + blockDim.x * blockIdx.x;

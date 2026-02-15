@@ -342,7 +342,7 @@ def plot_complexity(data):
     N = np.array([r["n_particles"] for r in data])
     force_ms = np.array([r["avg_force_ms"] for r in data])
 
-    # Fit log(time) = a * log(N) + b → time = C * N^a
+    # Fit log(time) = a * log(N) + b $\rightarrow$ time = C * N^a
     log_N = np.log(N)
     log_T = np.log(force_ms)
     coeffs = np.polyfit(log_N, log_T, 1)
