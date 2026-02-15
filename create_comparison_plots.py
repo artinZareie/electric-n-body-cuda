@@ -25,10 +25,28 @@ def read_scalability_data(csv_path):
             }
     return data
 
+def read_kernel_timings(csv_path):
+    """Read kernel timing data from nsys CSV file"""
+    kernels = {}
+    with open(csv_path) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            kernel_name = row['Name']
+            # Extract just the kernel function name (before the first parenthesis)
+            simple_name = kernel_name.split('(')[0]
+            total_time_ns = float(row['Total Time (ns)'])
+            total_time_ms = total_time_ns / 1e6  # Convert to milliseconds
+            kernels[simple_name] = total_time_ms
+    return kernels
+
 def main():
-    # Read data
+    # Read scalability data
     original = read_scalability_data('profiling_original/results/original/scalability/scalability_summary.csv')
     optimized = read_scalability_data('profiling_optimized/results/2026-02-15/scalability/scalability_summary.csv')
+    
+    # Read kernel timing data for N=4096
+    original_kernels_4096 = read_kernel_timings('profiling/results/2026-02-15/nsys/nsys_N4096_kernsum_cuda_gpu_kern_sum.csv')
+    optimized_kernels_4096 = read_kernel_timings('profiling_optimized/nsys_4096_opt_kernsum_cuda_gpu_kern_sum.csv')
     
     n_values = sorted(original.keys())
     
@@ -101,20 +119,26 @@ def main():
     # ============== Plot 4: Kernel Breakdown (N=4096) ==============
     ax4 = plt.subplot(2, 3, 4)
     
-    # Original kernel times (from profiling data)
-    original_kernels = ['compute_force', 'force_reduction', 'update_particle']
-    original_times_4096 = [823.7, 794.7, 4.2]  # ms
+    # Read kernel times from actual profiling data
+    original_kernel_names = ['compute_force', 'force_reduction', 'update_particle_states']
+    original_times_4096 = [
+        original_kernels_4096.get('compute_force', 0),
+        original_kernels_4096.get('force_reduction', 0),
+        original_kernels_4096.get('update_particle_states', 0)
+    ]
     
-    # Optimized kernel times
-    optimized_kernels = ['compute_force_tiled', 'update_particle']
-    optimized_times_4096 = [457.9, 2.5]  # ms
+    optimized_kernel_names = ['compute_force_tiled', 'update_particle_states']
+    optimized_times_4096 = [
+        optimized_kernels_4096.get('compute_force_tiled', 0),
+        optimized_kernels_4096.get('update_particle_states', 0)
+    ]
     
     # Create grouped bar chart
-    x_pos = np.arange(max(len(original_kernels), len(optimized_kernels)))
+    x_pos = np.arange(max(len(original_kernel_names), len(optimized_kernel_names)))
     width = 0.35
     
     # Pad optimized to same length
-    opt_padded = optimized_times_4096 + [0] * (len(original_kernels) - len(optimized_kernels))
+    opt_padded = optimized_times_4096 + [0] * (len(original_kernel_names) - len(optimized_kernel_names))
     
     bars1 = ax4.bar(x_pos - width/2, original_times_4096, width, label='Original', 
                     color=colors['original'], alpha=0.7, edgecolor='black')

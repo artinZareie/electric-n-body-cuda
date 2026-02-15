@@ -1,0 +1,3 @@
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+99.4,457871060,1000,457871.1,449817.0,441401,481275,12903.6,"compute_force_tiled(ParticlesView, float4 *, unsigned long)"
+0.6,2543153,1000,2543.2,2464.0,2368,11873,419.6,"update_particle_states(ParticlesView, const float3 *, float, unsigned long)"
