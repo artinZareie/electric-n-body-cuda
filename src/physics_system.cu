@@ -4,7 +4,6 @@
 PhysicsSystem::PhysicsSystem(size_t particle_count)
     : m_particle_count(particle_count), m_resources(std::make_unique<CudaResources>())
 {
-    // Only allocate net_forces, no need for force matrix anymore
     cudaMalloc(&m_resources->net_forces, particle_count * sizeof(float4));
 }
 
@@ -12,7 +11,6 @@ PhysicsSystem::~PhysicsSystem() = default;
 
 void PhysicsSystem::step(ParticlesView &particles_view, float dt)
 {
-    // Use tiled kernel that combines force computation and reduction
     dim3 block_size(256);
     dim3 grid_size((m_particle_count + block_size.x - 1) / block_size.x);
 
