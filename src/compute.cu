@@ -123,11 +123,8 @@ __global__ void force_reduction(const Array2D<float4> forces_matrix, float4 *net
     }
 }
 
-// Optimized tiled kernel that fuses force computation and reduction
-// Eliminates the N×N force matrix by computing forces directly into shared memory tiles
 __global__ void compute_force_tiled(const ParticlesView particles, float4 *net_forces, size_t N)
 {
-    // Tile size for shared memory (particles per tile)
     constexpr int TILE_SIZE = 256;
     
     __shared__ float s_x[TILE_SIZE];
@@ -141,20 +138,16 @@ __global__ void compute_force_tiled(const ParticlesView particles, float4 *net_f
     const size_t i = blockIdx.x * blockDim.x + threadIdx.x;
     const size_t tid = threadIdx.x;
     
-    // Accumulate force for particle i
     float3 F_total = make_float3(0.0f, 0.0f, 0.0f);
     
     if (i < N)
     {
-        // Load particle i's data
         const float3 ri = make_float3(particles.x[i], particles.y[i], particles.z[i]);
         const float3 vi = make_float3(particles.vx[i], particles.vy[i], particles.vz[i]);
         const float qi = particles.q[i];
         
-        // Iterate over all tiles
         for (size_t tile_start = 0; tile_start < N; tile_start += TILE_SIZE)
         {
-            // Load tile into shared memory
             size_t j_idx = tile_start + tid;
             if (j_idx < N)
             {
@@ -168,7 +161,6 @@ __global__ void compute_force_tiled(const ParticlesView particles, float4 *net_f
             }
             __syncthreads();
             
-            // Compute forces from this tile
             size_t tile_end = min(tile_start + TILE_SIZE, N);
             for (size_t j = tile_start; j < tile_end; j++)
             {
@@ -187,11 +179,9 @@ __global__ void compute_force_tiled(const ParticlesView particles, float4 *net_f
                 float inv_r = rsqrtf(r2);
                 float inv_r3 = inv_r * inv_r * inv_r;
                 
-                // Electric force
                 float coeff_e = K_E * qj * qi * inv_r3;
                 float3 F_electric = coeff_e * r;
                 
-                // Magnetic force
                 float coeff_m = K_M * qj * qi * inv_r3;
                 float vi_dot_r = dot(vi, r);
                 float vi_dot_vj = dot(vi, vj);
@@ -202,7 +192,6 @@ __global__ void compute_force_tiled(const ParticlesView particles, float4 *net_f
             __syncthreads();
         }
         
-        // Write net force
         net_forces[i] = make_float4(F_total.x, F_total.y, F_total.z, 0.0f);
     }
 }
