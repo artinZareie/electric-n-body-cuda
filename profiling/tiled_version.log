@@ -1,0 +1,93 @@
+Loading particles from file...
+Loaded 2 particles
+Running simulation for 1000 steps...
+Step 0/1000
+Step 100/1000
+Step 200/1000
+Step 300/1000
+Step 400/1000
+Step 500/1000
+Step 600/1000
+Step 700/1000
+Step 800/1000
+Step 900/1000
+Step 1000/1000
+
+Simulation complete! VTK files written to vtk/ directory.
+Run create_video_simple.py to generate video.
+Collecting data...
+Generating '/tmp/nsys-report-8420.qdstrm'
+[1/8] [0%                          ] tiled_version.nsys-rep[1/8] [0%                          ] tiled_version.nsys-rep[1/8] [13%                         ] tiled_version.nsys-rep[1/8] [=16%                        ] tiled_version.nsys-rep[1/8] [==19%                       ] tiled_version.nsys-rep[1/8] [==20%                       ] tiled_version.nsys-rep[1/8] [==21%                       ] tiled_version.nsys-rep[1/8] [====28%                     ] tiled_version.nsys-rep[1/8] [======35%                   ] tiled_version.nsys-rep[1/8] [==============63%           ] tiled_version.nsys-rep[1/8] [===================82%      ] tiled_version.nsys-rep[1/8] [========================100%] tiled_version.nsys-rep[1/8] [========================100%] tiled_version.nsys-rep
+[2/8] [0%                          ] tiled_version.sqlite[2KProcessing 38388 events: 
+[2/8] [1%                          ] tiled_version.sqlite[2/8] [2%                          ] tiled_version.sqlite[2/8] [3%                          ] tiled_version.sqlite[2/8] [4%                          ] tiled_version.sqlite[2/8] [5%                          ] tiled_version.sqlite[2/8] [6%                          ] tiled_version.sqlite[2/8] [7%                          ] tiled_version.sqlite[2/8] [8%                          ] tiled_version.sqlite[2/8] [9%                          ] tiled_version.sqlite[2/8] [10%                         ] tiled_version.sqlite[2/8] [11%                         ] tiled_version.sqlite[2/8] [12%                         ] tiled_version.sqlite[2/8] [13%                         ] tiled_version.sqlite[2/8] [14%                         ] tiled_version.sqlite[2/8] [=15%                        ] tiled_version.sqlite[2/8] [=16%                        ] tiled_version.sqlite[2/8] [=17%                        ] tiled_version.sqlite[2/8] [==18%                       ] tiled_version.sqlite[2/8] [==19%                       ] tiled_version.sqlite[2/8] [==20%                       ] tiled_version.sqlite[2/8] [==21%                       ] tiled_version.sqlite[2/8] [===22%                      ] tiled_version.sqlite[2/8] [===23%                      ] tiled_version.sqlite[2/8] [===24%                      ] tiled_version.sqlite[2/8] [====25%                     ] tiled_version.sqlite[2/8] [====26%                     ] tiled_version.sqlite[2/8] [====27%                     ] tiled_version.sqlite[2/8] [====28%                     ] tiled_version.sqlite[2/8] [=====29%                    ] tiled_version.sqlite[2/8] [=====30%                    ] tiled_version.sqlite[2/8] [=====31%                    ] tiled_version.sqlite[2/8] [=====32%                    ] tiled_version.sqlite[2/8] [======33%                   ] tiled_version.sqlite[2/8] [======34%                   ] tiled_version.sqlite[2/8] [======35%                   ] tiled_version.sqlite[2/8] [=======36%                  ] tiled_version.sqlite[2/8] [=======37%                  ] tiled_version.sqlite[2/8] [=======38%                  ] tiled_version.sqlite[2/8] [=======39%                  ] tiled_version.sqlite[2/8] [========40%                 ] tiled_version.sqlite[2/8] [========41%                 ] tiled_version.sqlite[2/8] [========42%                 ] tiled_version.sqlite[2/8] [=========43%                ] tiled_version.sqlite[2/8] [=========44%                ] tiled_version.sqlite[2/8] [=========45%                ] tiled_version.sqlite[2/8] [=========46%                ] tiled_version.sqlite[2/8] [==========47%               ] tiled_version.sqlite[2/8] [==========48%               ] tiled_version.sqlite[2/8] [==========49%               ] tiled_version.sqlite[2/8] [===========50%              ] tiled_version.sqlite[2/8] [===========51%              ] tiled_version.sqlite[2/8] [===========52%              ] tiled_version.sqlite[2/8] [===========53%              ] tiled_version.sqlite[2/8] [============54%             ] tiled_version.sqlite[2/8] [============55%             ] tiled_version.sqlite[2/8] [============56%             ] tiled_version.sqlite[2/8] [============57%             ] tiled_version.sqlite[2/8] [=============58%            ] tiled_version.sqlite[2/8] [=============59%            ] tiled_version.sqlite[2/8] [=============60%            ] tiled_version.sqlite[2/8] [==============61%           ] tiled_version.sqlite[2/8] [==============62%           ] tiled_version.sqlite[2/8] [==============63%           ] tiled_version.sqlite[2/8] [==============64%           ] tiled_version.sqlite[2/8] [===============65%          ] tiled_version.sqlite[2/8] [===============66%          ] tiled_version.sqlite[2/8] [===============67%          ] tiled_version.sqlite[2/8] [================68%         ] tiled_version.sqlite[2/8] [================69%         ] tiled_version.sqlite[2/8] [================70%         ] tiled_version.sqlite[2/8] [================71%         ] tiled_version.sqlite[2/8] [=================72%        ] tiled_version.sqlite[2/8] [=================73%        ] tiled_version.sqlite[2/8] [=================74%        ] tiled_version.sqlite[2/8] [==================75%       ] tiled_version.sqlite[2/8] [==================76%       ] tiled_version.sqlite[2/8] [==================77%       ] tiled_version.sqlite[2/8] [==================78%       ] tiled_version.sqlite[2/8] [===================79%      ] tiled_version.sqlite[2/8] [===================80%      ] tiled_version.sqlite[2/8] [===================81%      ] tiled_version.sqlite[2/8] [===================82%      ] tiled_version.sqlite[2/8] [====================83%     ] tiled_version.sqlite[2/8] [====================84%     ] tiled_version.sqlite[2/8] [====================85%     ] tiled_version.sqlite[2/8] [=====================86%    ] tiled_version.sqlite[2/8] [=====================87%    ] tiled_version.sqlite[2/8] [=====================88%    ] tiled_version.sqlite[2/8] [=====================89%    ] tiled_version.sqlite[2/8] [======================90%   ] tiled_version.sqlite[2/8] [======================91%   ] tiled_version.sqlite[2/8] [======================92%   ] tiled_version.sqlite[2/8] [=======================93%  ] tiled_version.sqlite[2/8] [=======================94%  ] tiled_version.sqlite[2/8] [=======================95%  ] tiled_version.sqlite[2/8] [=======================96%  ] tiled_version.sqlite[2/8] [========================97% ] tiled_version.sqlite[2/8] [========================98% ] tiled_version.sqlite[2/8] [========================99% ] tiled_version.sqlite[2/8] [========================100%] tiled_version.sqlite[2/8] [========================100%] tiled_version.sqlite
+SKIPPED: /mnt/Projects/Projects/nbody/profiling/tiled_version.sqlite does not contain NV Tools Extension (NVTX) data.
+[3/8] Executing 'nvtx_sum' stats report
+[4/8] Executing 'osrt_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls   Avg (ns)    Med (ns)   Min (ns)   Max (ns)    StdDev (ns)            Name         
+ --------  ---------------  ---------  -----------  ---------  --------  -----------  ------------  ----------------------
+     75.6      375,216,972         66  5,685,105.6  677,724.0     1,465  100,147,397  16,503,452.2  poll                  
+     16.4       81,381,240        438    185,801.9    6,773.5     1,005    6,473,839     530,097.8  ioctl                 
+      4.7       23,257,941      1,028     22,624.5   21,245.0     1,009       78,259       6,652.4  fopen                 
+      2.7       13,284,041      1,008     13,178.6   12,304.5     1,556      101,801       4,195.8  write                 
+      0.3        1,373,603         10    137,360.3   44,589.5    10,073      572,929     217,021.2  sem_timedwait         
+      0.2          908,782         25     36,351.3    6,569.0     2,501      561,840     110,894.5  mmap64                
+      0.1          367,528          4     91,882.0   48,904.5    28,717      241,002      99,995.7  pthread_create        
+      0.0          181,465        114      1,591.8    1,167.5     1,002        9,852       1,143.0  fclose                
+      0.0          149,621         42      3,562.4    2,380.0     1,092       16,037       3,200.4  open64                
+      0.0           92,051         13      7,080.8    4,851.0     1,317       34,077       8,791.5  mmap                  
+      0.0           82,707          1     82,707.0   82,707.0    82,707       82,707           0.0  pthread_cond_wait     
+      0.0           28,216          7      4,030.9    3,128.0     1,363        7,582       2,494.6  fread                 
+      0.0           25,523         10      2,552.3    1,866.0     1,137        8,438       2,245.0  read                  
+      0.0           21,843          1     21,843.0   21,843.0    21,843       21,843           0.0  fgets                 
+      0.0           15,855          5      3,171.0    3,722.0     1,777        4,174       1,065.7  open                  
+      0.0           11,341          2      5,670.5    5,670.5     4,858        6,483       1,149.0  socket                
+      0.0           11,186          5      2,237.2    2,440.0     1,009        3,371       1,024.6  close                 
+      0.0           10,458          3      3,486.0    4,117.0     2,178        4,163       1,133.0  munmap                
+      0.0            7,737          4      1,934.3    1,888.0     1,023        2,938         946.4  pipe2                 
+      0.0            7,585          1      7,585.0    7,585.0     7,585        7,585           0.0  connect               
+      0.0            5,308          2      2,654.0    2,654.0     1,611        3,697       1,475.0  fwrite                
+      0.0            4,931          1      4,931.0    4,931.0     4,931        4,931           0.0  fflush                
+      0.0            2,043          1      2,043.0    2,043.0     2,043        2,043           0.0  fcntl                 
+      0.0            1,890          1      1,890.0    1,890.0     1,890        1,890           0.0  dup                   
+      0.0            1,435          1      1,435.0    1,435.0     1,435        1,435           0.0  pthread_cond_broadcast
+      0.0            1,341          1      1,341.0    1,341.0     1,341        1,341           0.0  bind                  
+
+[5/8] Executing 'cuda_api_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)    Med (ns)   Min (ns)   Max (ns)   StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  ---------  --------  ----------  ------------  ----------------------
+     60.7       94,347,381          9  10,483,042.3    1,780.0     1,309  94,331,413  31,443,139.0  cudaMalloc            
+     30.6       47,489,998      8,024       5,918.5    5,846.0     2,298      38,902         726.5  cudaMemcpy            
+      5.9        9,139,151      1,000       9,139.2    4,948.0     2,966     336,612      29,210.1  cudaDeviceSynchronize 
+      2.5        3,870,997      2,000       1,935.5    1,863.5     1,542      67,309       1,562.4  cudaLaunchKernel      
+      0.1          231,072          1     231,072.0  231,072.0   231,072     231,072           0.0  cuLibraryLoadData     
+      0.1          148,884      2,000          74.4       63.0        49       1,145          35.1  cuKernelGetName       
+      0.1           98,806          9      10,978.4    2,014.0     1,446      75,848      24,473.5  cudaFree              
+      0.0            2,030          1       2,030.0    2,030.0     2,030       2,030           0.0  cuModuleGetLoadingMode
+      0.0              428          2         214.0      214.0       128         300         121.6  cuLibraryGetKernel    
+
+[6/8] Executing 'cuda_gpu_kern_sum' stats report
+
+ Time (%)  Total Time (ns)  Instances  Avg (ns)  Med (ns)  Min (ns)  Max (ns)  StdDev (ns)                                     Name                                    
+ --------  ---------------  ---------  --------  --------  --------  --------  -----------  ---------------------------------------------------------------------------
+     59.3        2,086,888      1,000   2,086.9   2,080.0     2,047     4,320        121.0  update_particle_states(ParticlesView, const float3 *, float, unsigned long)
+     40.7        1,433,973      1,000   1,434.0   1,408.0     1,376     6,272        180.0  compute_force_tiled(ParticlesView, float4 *, unsigned long)                
+
+[7/8] Executing 'cuda_gpu_mem_time_sum' stats report
+
+ Time (%)  Total Time (ns)  Count  Avg (ns)  Med (ns)  Min (ns)  Max (ns)  StdDev (ns)           Operation          
+ --------  ---------------  -----  --------  --------  --------  --------  -----------  ----------------------------
+    100.0        6,740,134  8,016     840.8     832.0       480     3,936        112.8  [CUDA memcpy Device-to-Host]
+      0.0            3,136      8     392.0     352.0       352       672        113.1  [CUDA memcpy Host-to-Device]
+
+[8/8] Executing 'cuda_gpu_mem_size_sum' stats report
+
+ Total (MB)  Count  Avg (MB)  Med (MB)  Min (MB)  Max (MB)  StdDev (MB)           Operation          
+ ----------  -----  --------  --------  --------  --------  -----------  ----------------------------
+      0.064  8,016     0.000     0.000     0.000     0.000        0.000  [CUDA memcpy Device-to-Host]
+      0.000      8     0.000     0.000     0.000     0.000        0.000  [CUDA memcpy Host-to-Device]
+
+Generated:
+	/mnt/Projects/Projects/nbody/profiling/tiled_version.nsys-rep
+	/mnt/Projects/Projects/nbody/profiling/tiled_version.sqlite

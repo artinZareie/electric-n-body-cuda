@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
+#define USE_TILED_VERSION
+
 constexpr float VACUUM_PERMITTIVITY = 8.8541878188e-12f;
 constexpr float VACUUM_PERMEABILITY = 1.25663706212e-6f;
 constexpr float K_E = 1.0f / (4.0f * M_PI * VACUUM_PERMITTIVITY);
