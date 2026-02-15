@@ -142,8 +142,8 @@ The optimized version is now **compute-bound** rather than memory-bound.
 The expected scaling for O(N²) algorithms is ~4× per doubling (since 2² = 4).
 
 **Original version:**
-- At large N (4096→8192): Achieves 3.78× scaling, close to theoretical 4×
-- Memory-bound: DRAM bandwidth saturated, scales predictably with O(N²) traffic
+- At large N (4096→8192): Achieves 3.78× scaling, close to theoretical 4x
+- Memory-bound: DRAM bandwidth saturated, scales predictably with $O(N^2)$ traffic
 
 **Optimized version:**
 - At large N (4096→8192): Only 2.12× scaling (better than linear, worse than quadratic)
